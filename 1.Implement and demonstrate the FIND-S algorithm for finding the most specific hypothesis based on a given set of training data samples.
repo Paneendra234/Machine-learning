@@ -1,0 +1,26 @@
+def find_s_algorithm(training_data):
+    """
+    Implements the FIND-S algorithm.
+    training_data: List of tuples. Each tuple is (attributes_list, label)
+    Only positive examples (label == 'Yes') are used to generalize the hypothesis.
+    """
+    num_attributes = len(training_data[0][0])
+    hypothesis = ['0'] * num_attributes
+    for attributes, label in training_data:
+        if label == 'Yes': 
+            if hypothesis == ['0'] * num_attributes:
+                hypothesis = attributes.copy()
+            else:
+                for i in range(num_attributes):
+                    if hypothesis[i] != attributes[i]:
+                        hypothesis[i] = '?'
+    return hypothesis
+training_data = [
+    (['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same'], 'Yes'),
+    (['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same'], 'Yes'),
+    (['Rainy', 'Cold', 'High', 'Strong', 'Warm', 'Change'], 'No'),
+    (['Sunny', 'Warm', 'High', 'Strong', 'Cool', 'Change'], 'Yes')
+]
+hypothesis = find_s_algorithm(training_data)
+print("Most specific hypothesis found by FIND-S:")
+print(hypothesis)
