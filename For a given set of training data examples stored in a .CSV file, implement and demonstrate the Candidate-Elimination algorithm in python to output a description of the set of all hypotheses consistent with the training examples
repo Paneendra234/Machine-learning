@@ -1,0 +1,30 @@
+import csv
+with open('training_data.csv', 'r') as file:
+    reader = csv.reader(file)
+    data = list(reader)
+num_attributes = len(data[0]) - 1
+S = data[0][:-1] if data[0][-1] == 'Yes' else ['0'] * num_attributes
+G = [['?' for _ in range(num_attributes)]]
+for row in data:
+    instance, label = row[:-1], row[-1]
+    if label == 'Yes':  
+        for i in range(num_attributes):
+            if S[i] != instance[i]:
+                S[i] = '?'
+        G = [g for g in G if all(g[i] == '?' or g[i] == S[i] for i in range(num_attributes))]
+    elif label == 'No':  
+        G_new = []
+        for g in G:
+            for i in range(num_attributes):
+                if g[i] == '?':
+                    if S[i] != '?':
+                        g_copy = g.copy()
+                        g_copy[i] = S[i]
+                        if g_copy[i] != instance[i]:
+                            G_new.append(g_copy)
+        G = [g for g in G_new if all(g[i] == '?' or g[i] != instance[i] for i in range(num_attributes))]
+print("Final Specific Hypothesis (S):")
+print(S)
+print("\nFinal General Hypotheses (G):")
+for g in G:
+    print(g)
